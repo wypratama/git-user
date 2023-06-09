@@ -1,8 +1,12 @@
 import './App.css'
 import { useEffect } from 'react'
+import useReactive from 'react-use-reactive'
 import axios from '~/lib/axios'
 
 function App() {
+  const state = useReactive({
+    users: []
+  })
 
   useEffect(() => {
     axios.get('search/users?q=wicak').then(console.log)

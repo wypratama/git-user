@@ -10,6 +10,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-use-reactive:
+    specifier: ^1.0.0
+    version: 1.0.0(react@18.2.0)
 
 devDependencies:
   '@types/node':
@@ -2901,6 +2904,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-use-reactive@1.0.0(react@18.2.0):
+    resolution: {integrity: sha512-ieaVJRLGjgQYquTZOptFV76URzkcQ4hi7BBYPPftP7lYI0MJKMZO3YM/48LIszDN0A0WzBmOLRCPlRsuPJgZ7w==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react@18.2.0:
