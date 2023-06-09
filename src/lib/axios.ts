@@ -1,6 +1,12 @@
 import axios from "axios";
 import { API_URL } from "~/config";
 
-export const instance = axios.create({
+const instance = axios.create({
 	baseURL: API_URL,
+	headers: {
+		Accept: "application/vnd.github+json",
+		"X-GitHub-Api-Version": "2022-11-28",
+	},
 });
+
+export default instance;

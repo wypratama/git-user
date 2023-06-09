@@ -1,6 +1,12 @@
 import './App.css'
+import { useEffect } from 'react'
+import axios from '~/lib/axios'
 
 function App() {
+
+  useEffect(() => {
+    axios.get('search/users?q=wicak').then(console.log)
+  })
 
   return (
     <div className='container mx-auto py-8'>
