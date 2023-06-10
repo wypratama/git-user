@@ -9,7 +9,7 @@ function App() {
     users: []
   })
 
-  const { data } = useQuery<{ hello: 'there' }>({
+  const { data } = useQuery<{ items: any[] }>({
     queryKey: ['user'], queryFn: async () => {
       return await axios.get('search/users?q=wicak')
     }
@@ -37,7 +37,7 @@ function App() {
       </form>
 
       {
-        state.users.length ? state.users.map(user => <div>{user.login}</div>) : null
+        data?.items.length ? data?.items.map(user => <div key={user.id}>{user.login}</div>) : null
       }
 
     </div>
