@@ -1,4 +1,5 @@
 import './App.css'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import useReactive from 'react-use-reactive'
 import axios from '~/lib/axios'
@@ -8,9 +9,15 @@ function App() {
     users: []
   })
 
-  useEffect(() => {
-    axios.get('search/users?q=wicak').then(console.log)
+  const { data } = useQuery<{ hello: 'there' }>({
+    queryKey: ['user'], queryFn: async () => {
+      return await axios.get('search/users?q=wicak')
+    }
   })
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   return (
     <div className='container mx-auto py-8'>
@@ -28,6 +35,10 @@ function App() {
           <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
         </div>
       </form>
+
+      {
+        state.users.length ? state.users.map(user => <div>{user.login}</div>) : null
+      }
 
     </div>
   )
