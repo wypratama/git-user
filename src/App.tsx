@@ -1,5 +1,5 @@
 import './App.css'
-import { User } from './types/index.type'
+import type { User } from './types/interfaces'
 import { FormEventHandler } from 'react'
 import useReactive from 'react-use-reactive'
 import { UserCard } from '~/components'
