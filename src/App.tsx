@@ -1,28 +1,37 @@
 import './App.css'
-import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { User } from './types/index.type'
+import { FormEventHandler } from 'react'
 import useReactive from 'react-use-reactive'
+import { UserCard } from '~/components'
 import axios from '~/lib/axios'
 
 function App() {
-  const state = useReactive({
+  const state = useReactive<{
+    searchInput: string;
+    users: User[]
+  }>({
+    searchInput: '',
     users: []
   })
 
-  const { data } = useQuery<{ items: any[] }>({
-    queryKey: ['user'], queryFn: async () => {
-      return await axios.get('search/users?q=wicak')
-    }
-  })
+  const searchUser: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+    console.log(state.searchInput)
+    if (!state.searchInput) return
+    const response = await axios.get<{
+      incomplete_results: boolean
+      items: User[]
+      total_count: number
+    }>(`search/users?q=${state.searchInput}`)
+    console.log(response)
+    state.users = response.data.items
+  }
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
 
   return (
-    <div className='container mx-auto py-8'>
+    <div className='container mx-auto py-8 px-4'>
 
-      <form>
+      <form onSubmit={searchUser}>
         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -31,14 +40,15 @@ function App() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <input type="search" id="default-search" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required />
-          <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+          <input type="search" id="default-search" placeholder="Type username" className="block input input-bordered input-lg w-full p-4 pl-10" value={state.searchInput} onInput={(e) => { state.searchInput = (e.target as HTMLInputElement).value }} />
+
+          <button type="submit" className="btn btn-primary absolute right-2.5 bottom-2">Search</button>
         </div>
       </form>
 
-      {
-        data?.items.length ? data?.items.map(user => <div key={user.id}>{user.login}</div>) : null
-      }
+      <div className='flex flex-col gap-3 mt-4'>
+        {state.users.length ? state.users.map(user => <UserCard key={user.id} user={user} />) : null}
+      </div>
 
     </div>
   )
