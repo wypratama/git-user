@@ -1,30 +1,40 @@
-import './App.css'
 import type { User } from './types/interfaces'
 import { FormEventHandler } from 'react'
 import useReactive from 'react-use-reactive'
-import { UserCard } from '~/components'
+import { Empty, Loading, UserCard } from '~/components'
 import axios from '~/lib/axios'
 
+type AppState = {
+  searchInput: string;
+  users: User[],
+  isLoading: boolean
+}
+
 function App() {
-  const state = useReactive<{
-    searchInput: string;
-    users: User[]
-  }>({
+  const state = useReactive<AppState>({
     searchInput: '',
-    users: []
+    users: [],
+    isLoading: false
   })
 
   const searchUser: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
-    console.log(state.searchInput)
-    if (!state.searchInput) return
-    const response = await axios.get<{
-      incomplete_results: boolean
-      items: User[]
-      total_count: number
-    }>(`search/users?q=${state.searchInput}`)
-    console.log(response)
-    state.users = response.data.items
+    try {
+      state.isLoading = true
+      console.log(state.searchInput)
+      if (!state.searchInput) return
+      const response = await axios.get<{
+        incomplete_results: boolean
+        items: User[]
+        total_count: number
+      }>(`search/users?q=${state.searchInput}`)
+      console.log(response)
+      state.users = response.data.items
+    } catch (error) {
+
+    } finally {
+      state.isLoading = false
+    }
   }
 
 
@@ -46,9 +56,15 @@ function App() {
         </div>
       </form>
 
-      <div className='flex flex-col gap-3 mt-4'>
-        {state.users.length ? state.users.map(user => <UserCard key={user.id} user={user} />) : null}
-      </div>
+      {
+        state.isLoading ?
+          <div className='w-full flex p-20 justify-center items-center'><Loading /></div>
+          :
+          <div className='flex flex-col gap-3 mt-4'>
+            {state.users.length ? state.users.map(user => <UserCard key={user.id} user={user} />) : <Empty />}
+          </div>
+      }
+
 
     </div>
   )
