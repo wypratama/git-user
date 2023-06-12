@@ -6,7 +6,7 @@ type Props = {
 
 export default function Repository({ repo }: Props) {
   return (
-    <div className="card w-full bg-secondary text-primary-content">
+    <div className="card w-full bg-base-100 text-base-content">
       <div className="card-body">
         <h2 className="card-title">{repo.name}</h2>
         <p>{repo.description}</p>
