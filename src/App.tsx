@@ -27,7 +27,7 @@ function App() {
         incomplete_results: boolean
         items: User[]
         total_count: number
-      }>(`search/users?q=${state.searchInput}`)
+      }>(`search/users?q=${state.searchInput}&per_page=5`)
       console.log(response)
       state.users = response.data.items
     } catch (error) {
