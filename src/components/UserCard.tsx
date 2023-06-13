@@ -40,15 +40,12 @@ export default function UserCard({ user }: Props) {
     try {
       repos.isLoading = true
       userDetail.isLoading = true
-      console.log(e.target.id)
       const { data } = await axios.get<Repo[]>(`users/${e.target.id}/repos`)
       const { data: userData } = await axios.get<UserDetail>(`users/${e.target.id}`)
-      console.log(userData)
       userDetail.data = userData
       repos.data = data
     } catch (error) {
       repos.isError = true
-      console.log(error)
     } finally {
       repos.isLoading = false
       userDetail.isLoading = false
